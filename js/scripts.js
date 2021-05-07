@@ -1,5 +1,5 @@
 // Mapa Leaflet
-var mapa = L.map('mapid').setView([9.8, -84.25], 8);
+var mapa = L.map('mapid').setView([9.94, -84.11], 12);
 
 // Definición de capas base
 var capa_osm = L.tileLayer(
@@ -10,10 +10,19 @@ var capa_osm = L.tileLayer(
   }
 ).addTo(mapa);	
 
+// Otra capa base esri
+var capa_esri = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
+    {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }
+).addTo(mapa)
+
 // Conjunto de capas base
 var capas_base = {
+  "ESRI": capa_esri,
   "OSM": capa_osm
-};	    
+};
 	    
 // Control de capas
 control_capas = L.control.layers(capas_base).addTo(mapa);	
@@ -21,32 +30,50 @@ control_capas = L.control.layers(capas_base).addTo(mapa);
 // Control de escala
 L.control.scale().addTo(mapa);
 
-// Capa vectorial de ASP en formato GeoJSON
-$.getJSON("https://tpb729-desarrollosigweb-2021.github.io/datos/sinac/areas_protegidas-wgs84.geojson", function(geodata) {
-  var capa_asp = L.geoJson(geodata, {
+// Capa vectorial de centroides de los distritos en formato GeoJSON
+
+$.getJSON("https://dvictoria2020.github.io/tarea-2/datos/centroide/distritos_p.geojson", function(geodata) {
+  var capa_distritos_p = L.geoJson(geodata, {
     style: function(feature) {
-	  return {'color': "#013220", 'weight': 2.5, 'fillOpacity': 0.0}
+	  return {'color': "grey", 'weight': 1.5, 'fillOpacity': 0.0}
     },
     onEachFeature: function(feature, layer) {
-      var popupText = "<strong>Área protegida</strong>: " + feature.properties.nombre_asp + "<br>" + "<strong>Categoría</strong>: " + feature.properties.cat_manejo;
+      var popupText = "<strong>Distrito</strong>: " + feature.properties.distrito + "<br>" + "<strong>Provincia</strong>: " + feature.properties.canton;
       layer.bindPopup(popupText);
     }			
   }).addTo(mapa);
 
-  control_capas.addOverlay(capa_asp, 'Áreas protegidas');
+  control_capas.addOverlay(capa_distritos_p, 'Distritos');
 });
 
-// Capa vectorial de distritos en formato GeoJSON
-$.getJSON("https://tpb729-desarrollosigweb-2021.github.io/datos/ign/distritos-wgs84.geojson", function(geodata) {
-  var capa_distritos = L.geoJson(geodata, {
+// Capa vectorial de rios en formato GeoJSON
+$.getJSON("https://dvictoria2020.github.io/tarea-2/datos/rios/rios.geojson", function(geodata) {
+  var rios = L.geoJson(geodata, {
     style: function(feature) {
-	  return {'color': "lightblue", 'weight': 1.5, 'fillOpacity': 0.0}
+	  return {'color': "blue", 'weight': 0.5, 'fillOpacity': 0.0}
     },
     onEachFeature: function(feature, layer) {
-      var popupText = "<strong>Distrito</strong>: " + feature.properties.distrito + "<br>" + "<strong>Cantón</strong>: " + feature.properties.canton + "<br>" + "<strong>Provincia</strong>: " + feature.properties.provincia;
+      var popupText = "<strong>Nombre del río</strong>: " + feature.properties.NOMBRE;
       layer.bindPopup(popupText);
     }			
   }).addTo(mapa);
 
-  control_capas.addOverlay(capa_distritos, 'Distritos');
+  control_capas.addOverlay(rios, 'Red hídrica');
 });
+
+// Capa vectorial de terrenos del estado en formato GeoJSON
+$.getJSON("https://dvictoria2020.github.io/tarea-2/datos/terrenos/terrenos_estado.geojson", function(geodata) {
+  var terrenos = L.geoJson(geodata, {
+    style: function(feature) {
+	  return {'color': "red", 'weight': 1.5, 'fillOpacity': 0.0}
+    },
+    onEachFeature: function(feature, layer) {
+      var popupText = "<strong>Propietario</strong>: " + feature.properties.nom_juridi + "<br>" + "<strong>Tipo de Inmueble</strong>: " + feature.properties.t_inmueb + "<br>" + "<strong>Clasificación</strong>: " + feature.properties.clasific + "<br>" + "<strong>Amenazas</strong>: " + feature.properties.r_fisica + "<br>" + "<strong>Número de finca</strong>: " + feature.properties.finca;
+      layer.bindPopup(popupText);
+    }			
+  }).addTo(mapa);
+
+  control_capas.addOverlay(terrenos, 'Terrenos del Estado');
+});
+
+ 
