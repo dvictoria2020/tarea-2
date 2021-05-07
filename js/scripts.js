@@ -1,5 +1,5 @@
 // Mapa Leaflet
-var mapa = L.map('mapid').setView([9.94, -84.11], 12);
+var mapa = L.map('mapid').setView([9.95, -84.15], 13);
 
 // Definición de capas base
 var capa_osm = L.tileLayer(
@@ -58,7 +58,7 @@ $.getJSON("https://dvictoria2020.github.io/tarea-2/datos/rios/rios.geojson", fun
     }			
   }).addTo(mapa);
 
-  control_capas.addOverlay(rios, 'Red hídrica');
+  control_capas.addOverlay(rios,'Red hídrica');
 });
 
 // Capa vectorial de terrenos del estado en formato GeoJSON
