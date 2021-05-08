@@ -21,7 +21,7 @@ var capa_esri = L.tileLayer(
 // Conjunto de capas base
 var capas_base = {
   "ESRI": capa_esri,
-  "OSM": capa_osm
+  "OSM": capa_osm,
 };
 	    
 // Control de capas
