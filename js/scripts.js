@@ -50,7 +50,7 @@ $.getJSON("https://dvictoria2020.github.io/tarea-2/datos/centroide/distritos_p.g
 $.getJSON("https://dvictoria2020.github.io/tarea-2/datos/rios/rios.geojson", function(geodata) {
   var rios = L.geoJson(geodata, {
     style: function(feature) {
-	  return {'color': "blue", 'weight': 0.5, 'fillOpacity': 0.0}
+	  return {'color': "darkblue", 'weight': 1.5, 'fillOpacity': 0.0}
     },
     onEachFeature: function(feature, layer) {
       var popupText = "<strong>Nombre del río</strong>: " + feature.properties.NOMBRE;
@@ -59,6 +59,21 @@ $.getJSON("https://dvictoria2020.github.io/tarea-2/datos/rios/rios.geojson", fun
   }).addTo(mapa);
 
   control_capas.addOverlay(rios,'Red hídrica');
+});
+
+// Capa vectorial de amenaza de inundacion en formato GeoJSON
+$.getJSON("https://dvictoria2020.github.io/tarea-2/datos/rios/amenaza_inundacion.geojson", function(geodata) {
+  var amenaza_inundacion = L.geoJson(geodata, {
+    style: function(feature) {
+	  return {'color': "#4682b4", 'weight': 3, 'fillOpacity': 0.0}
+    },
+    onEachFeature: function(feature, layer) {
+      var popupText = "<strong>Descripción de la amenaza</strong>: " + feature.properties.Descrip;
+      layer.bindPopup(popupText);
+    }			
+  }).addTo(mapa);
+
+  control_capas.addOverlay(amenaza_inundacion,'Amenaza de inundación');
 });
 
 // Capa vectorial de terrenos del estado en formato GeoJSON
